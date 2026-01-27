@@ -9,6 +9,19 @@ export const obtenerUsuarios = async (req, res) => {
   }
 };
 
+export const obtenerUsuario = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const usuario = await userService.obtenerUsuarioPorIdService(id);
+    res.json(usuario);
+  } catch (error) {
+    if (error.message === "USUARIO_NO_ENCONTRADO") {
+      return res.status(404).json({ mensaje: "Usuario no encontrado" });
+    }
+    res.status(500).json({ mensaje: "Error interno" });
+  }
+}
+
 export const editarUsuario = async (req, res) => {
   try {
     const { id } = req.params;

@@ -10,6 +10,19 @@ export const obtenerUsuariosService = async () => {
   return usuarios;
 };
 
+export const obtenerUsuarioPorIdService = async (id) => {
+  const usuario = await usuarioRepository.findOne({
+    where: { id: parseInt(id) },
+    select: ["id", "rut", "nombre", "rol"]
+  });
+
+  if (!usuario) {
+    throw new Error("USUARIO_NO_ENCONTRADO");
+  }
+  
+  return usuario;
+};
+
 export const editarUsuarioService = async (id, datosActualizados) => {
   const usuario = await usuarioRepository.findOneBy({ id: parseInt(id) });
   if (!usuario) {
