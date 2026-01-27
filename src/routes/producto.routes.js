@@ -12,11 +12,12 @@ import { crearProductoEsquema, editarProductoEsquema } from "../validations/prod
 
 const router = Router();
 
-router.post("/", verificarToken, validarEsquema(crearProductoEsquema), crearProducto);
-router.get("/", verificarToken, obtenerProductos);
-router.get("/:id", verificarToken, obtenerProducto);
-router.put("/:id", verificarToken, validarEsquema(editarProductoEsquema), editarProducto);
+router.use(verificarToken);
+router.post("/", validarEsquema(crearProductoEsquema), crearProducto);
+router.get("/", obtenerProductos);
+router.get("/:id", obtenerProducto);
+router.put("/:id", validarEsquema(editarProductoEsquema), editarProducto);
 
-router.delete("/:id", verificarToken, esAdministrador, eliminarProducto);
+router.delete("/:id", esAdministrador, eliminarProducto);
 
 export default router;
