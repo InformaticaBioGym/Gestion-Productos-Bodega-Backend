@@ -5,10 +5,10 @@ import {
   obtenerProducto, 
   editarProducto, 
   eliminarProducto 
-} from "../controllers/product.controller.js";
+} from "../controllers/producto.controller.js";
 import { verificarToken, esAdministrador } from "../middlewares/auth.middleware.js";
 import { validarEsquema } from "../middlewares/validador.middleware.js";
-import { crearProductoEsquema, editarProductoEsquema } from "../validations/product.validation.js";
+import { crearProductoEsquema, editarProductoEsquema } from "../validations/producto.validation.js";
 
 const router = Router();
 

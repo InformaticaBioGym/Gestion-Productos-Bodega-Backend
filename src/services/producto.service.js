@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/db.config.js";
-import { Producto } from "../entities/Producto.js"; 
+import { Producto } from "../entities/producto.entity.js"; 
 
 const productoRepository = AppDataSource.getRepository(Producto);
 
