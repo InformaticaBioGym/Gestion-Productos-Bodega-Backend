@@ -14,12 +14,12 @@ export const crearProductoEsquema = Joi.object({
 });
 
 export const editarProductoEsquema = Joi.object({
-  nombre: Joi.string().min(3).max(100).optional({
+  nombre: Joi.string().min(3).max(100).optional().messages({
     "string.min": "El nombre debe tener al menos 3 caracteres",
     "string.max": "El nombre es muy largo"
   }),
 
-  sku: Joi.string().min(3).max(50).optional({
+  sku: Joi.string().min(3).max(50).optional().messages({
     "string.min": "El SKU debe tener al menos 3 caracteres",
     "string.max": "El SKU es muy largo"
   })
