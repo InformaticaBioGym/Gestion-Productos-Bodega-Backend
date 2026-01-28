@@ -16,6 +16,11 @@ export const Ubicacion = new EntitySchema({
     estante: { 
       type: "int", 
       nullable: true 
+    },
+    descripcion: { 
+      type: "varchar", 
+      length: 100,
+      nullable: true 
     }, 
   },
   relations: {
