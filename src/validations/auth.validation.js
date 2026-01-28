@@ -1,11 +1,12 @@
 import Joi from "joi";
 
 export const registroEsquema = Joi.object({
-  rut: Joi.string().min(8).max(9).required().messages({
-    "string.empty": "El RUT no puede estar vacío",
-    "string.min": "El RUT es muy corto",
-    "string.max": "El RUT es muy largo",
-    "any.required": "El RUT es un campo obligatorio"
+  correo: Joi.string().min(8).max(100).email().required().messages({
+    "string.empty": "El correo no puede estar vacío",
+    "string.min": "El correo es muy corto",
+    "string.max": "El correo es muy largo",
+    "any.required": "El correo es un campo obligatorio",
+    "string.email": "El correo debe ser una dirección de correo válida"
   }),
   
   nombre: Joi.string().min(3).max(100).required().messages({

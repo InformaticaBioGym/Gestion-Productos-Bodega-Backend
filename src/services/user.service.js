@@ -5,7 +5,7 @@ const usuarioRepository = AppDataSource.getRepository("Usuario");
 
 export const obtenerUsuariosService = async () => {
   const usuarios = await usuarioRepository.find({
-    select: ["id", "rut", "nombre", "rol"]
+    select: ["id", "correo", "nombre", "rol"]
   });
   return usuarios;
 };
@@ -13,7 +13,7 @@ export const obtenerUsuariosService = async () => {
 export const obtenerUsuarioPorIdService = async (id) => {
   const usuario = await usuarioRepository.findOne({
     where: { id: parseInt(id) },
-    select: ["id", "rut", "nombre", "rol"]
+    select: ["id", "correo", "nombre", "rol"]
   });
 
   if (!usuario) {
@@ -29,18 +29,16 @@ export const editarUsuarioService = async (id, datosActualizados) => {
     throw new Error("USUARIO_NO_ENCONTRADO");
   }
 
-  if (datosActualizados.rut && datosActualizados.rut !== usuario.rut) {
-    const rutOcupado = await usuarioRepository.findOneBy({ rut: datosActualizados.rut });
-    if (rutOcupado) {
-      throw new Error("RUT_DUPLICADO");
+  if (datosActualizados.correo && datosActualizados.correo !== usuario.correo) {
+    const correoOcupado = await usuarioRepository.findOneBy({ correo: datosActualizados.correo });
+    if (correoOcupado) {
+      throw new Error("CORREO_DUPLICADO");
     }
   }
 
   if (datosActualizados.contraseña) {
     const salt = await bcrypt.genSalt(10);
-    datosActualizados.contraseña = await bcrypt.hash(datosActualizados.contraseña, salt);
-    
-    delete datosActualizados.contraseña; 
+    datosActualizados.contraseña = await bcrypt.hash(datosActualizados.contraseña, salt); 
   }
 
   usuarioRepository.merge(usuario, datosActualizados);

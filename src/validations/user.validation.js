@@ -10,9 +10,10 @@ export const editarUsuarioEsquema = Joi.object({
     "any.only": "El rol solo puede ser 'administrador' o 'trabajador'"
   }),
 
-  rut: Joi.string().min(8).max(9).optional().messages({
-    "string.min": "El RUT es muy corto (mínimo 8 caracteres)",
-    "string.max": "El RUT es muy largo (máximo 9 caracteres)"
+  correo: Joi.string().min(8).max(100).email().optional().messages({
+    "string.min": "El correo es muy corto",
+    "string.max": "El correo es muy largo",
+    "string.email": "El correo debe ser una dirección de correo válida"
   }),
 
   contraseña: Joi.string().min(6).max(72).optional().messages({

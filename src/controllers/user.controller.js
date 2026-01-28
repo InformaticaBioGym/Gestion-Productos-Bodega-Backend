@@ -35,8 +35,8 @@ export const editarUsuario = async (req, res) => {
     if (error.message === "USUARIO_NO_ENCONTRADO") {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
-    if (error.message === "RUT_DUPLICADO") {
-        return res.status(400).json({ mensaje: "El nuevo RUT ya está siendo usado por otro usuario." });
+    if (error.message === "CORREO_DUPLICADO") {
+        return res.status(400).json({ mensaje: "El nuevo correo ya está siendo usado por otro usuario." });
     }
     res.status(500).json({ mensaje: "Error interno" });
   }
