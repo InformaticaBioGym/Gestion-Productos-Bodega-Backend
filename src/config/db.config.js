@@ -22,17 +22,20 @@ export const AppDataSource = new DataSource({
 async function crearAdminPorDefecto() {
   try {
     const usuarioRepository = AppDataSource.getRepository("Usuario");
+    const adminEmail = process.env.ADMIN_EMAIL;
+    const adminPassword = process.env.ADMIN_PASSWORD;
+    
     const adminExistente = await usuarioRepository.findOne({
-      where: { correo: "admin@biogym.com" }
+      where: { correo: adminEmail }
     });
     if (adminExistente) {
       console.log("✓ Usuario admin ya existe");
       return;
     }
     const salt = await bcrypt.genSalt(10);
-    const contraseñaEncriptada = await bcrypt.hash("admin123", salt);
+    const contraseñaEncriptada = await bcrypt.hash(adminPassword, salt);
     const nuevoAdmin = usuarioRepository.create({
-      correo: "admin@biogym.com",
+      correo: adminEmail,
       nombre: "Administrador",
       contraseña: contraseñaEncriptada,
       rol: "administrador"
