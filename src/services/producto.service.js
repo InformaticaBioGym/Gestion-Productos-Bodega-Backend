@@ -1,5 +1,6 @@
 import { AppDataSource } from "../config/db.config.js";
 import { Producto } from "../entities/producto.entity.js"; 
+import { ILike } from "typeorm";
 
 const productoRepository = AppDataSource.getRepository(Producto);
 
@@ -11,8 +12,16 @@ export const crearProductoService = async (datos) => {
   return await productoRepository.save(nuevoProducto);
 };
 
-export const obtenerProductosService = async () => {
-  return await productoRepository.find();
+export const obtenerProductosService = async (termino) => {
+  if (!termino) {
+    return await productoRepository.find({ take: 50 });
+  }
+  return await productoRepository.find({
+    where: [
+      { sku: ILike(`%${termino}%`) },   
+      { nombre: ILike(`%${termino}%`) } 
+    ]
+  });
 };
 
 export const obtenerProductoPorIdService = async (id) => {

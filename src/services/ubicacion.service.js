@@ -3,6 +3,7 @@ import { Ubicacion } from "../entities/ubicacion.entity.js";
 import { Bodega } from "../entities/bodega.entity.js";
 import { Producto } from "../entities/producto.entity.js";
 import { IsNull } from "typeorm";
+import { ILike } from "typeorm";
 
 const ubicacionRepository = AppDataSource.getRepository(Ubicacion);
 const bodegaRepository = AppDataSource.getRepository(Bodega);
@@ -44,17 +45,16 @@ export const crearUbicacionService = async (datos) => {
   return await ubicacionRepository.save(nuevaUbicacion);
 };
 
-export const obtenerUbicacionesService = async () => {
-  return await ubicacionRepository.find({
-    relations: ["producto", "bodega"] 
-  });
-};
+export const obtenerUbicacionesService = async (termino) => {
+  const query = ubicacionRepository.createQueryBuilder("ubicacion")
+    .leftJoinAndSelect("ubicacion.producto", "producto")
+    .leftJoinAndSelect("ubicacion.bodega", "bodega");
 
-export const obtenerUbicacionesPorProductoService = async (idProducto) => {
-  return await ubicacionRepository.find({
-    where: { producto: { id: parseInt(idProducto) } },
-    relations: ["bodega"]
-  });
+  if (termino) {
+    query.where("producto.sku ILIKE :termino OR producto.nombre ILIKE :termino", { termino: `%${termino}%` });
+  }
+
+  return await query.getMany();
 };
 
 export const obtenerUbicacionPorIdService = async (id) => {
@@ -73,23 +73,24 @@ export const editarUbicacionService = async (id, datos) => {
   });
 
   if (!ubicacion) throw new Error("UBICACION_NO_ENCONTRADA");
+  const bodegaIdFinal = datos.bodega_id ? parseInt(datos.bodega_id) : ubicacion.bodega.id;
+  const estanteFinal = datos.estante ? parseInt(datos.estante) : ubicacion.estante;
+  if (datos.bodega_id || datos.estante) {
+      const bodega = await bodegaRepository.findOneBy({ id: bodegaIdFinal });
+      if (!bodega) throw new Error("BODEGA_NO_ENCONTRADA");
 
-  if (datos.estante || datos.bodega_id) {
-      const bodega = await bodegaRepository.findOneBy({ id: nuevaBodegaId });
-      if (nuevoEstante && nuevoEstante > bodega.n_estantes) {
+      if (estanteFinal > bodega.n_estantes) {
           throw new Error("ESTANTE_INVALIDO");
       }
   }
-
   if (datos.bodega_id || datos.estante !== undefined) {
       const duplicado = await ubicacionRepository.findOne({
         where: {
           producto: { id: ubicacion.producto.id },
-          bodega: { id: nuevaBodegaId },
-          estante: nuevoEstante || IsNull()
+          bodega: { id: bodegaIdFinal },
+          estante: estanteFinal
         }
       });
-
       if (duplicado && duplicado.id !== parseInt(id)) {
         throw new Error("UBICACION_DUPLICADA");
       }
@@ -103,13 +104,4 @@ export const eliminarUbicacionService = async (id) => {
   const resultado = await ubicacionRepository.delete({ id: parseInt(id) });
   if (resultado.affected === 0) throw new Error("UBICACION_NO_ENCONTRADA");
   return true;
-};
-
-export const buscarUbicacionesPorSkuService = async (sku) => {
-  return await ubicacionRepository.find({
-    where: { 
-      producto: { sku: sku } 
-    },
-    relations: ["bodega", "producto"] 
-  });
 };

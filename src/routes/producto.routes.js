@@ -2,9 +2,9 @@ import { Router } from "express";
 import { 
   crearProducto, 
   obtenerProductos, 
-  obtenerProducto, 
+  obtenerProductoPorId, 
   editarProducto, 
-  eliminarProducto 
+  eliminarProducto
 } from "../controllers/producto.controller.js";
 import { verificarToken, esAdministrador } from "../middlewares/auth.middleware.js";
 import { validarEsquema } from "../middlewares/validador.middleware.js";
@@ -15,7 +15,7 @@ const router = Router();
 router.use(verificarToken);
 router.post("/", validarEsquema(crearProductoEsquema), crearProducto);
 router.get("/", obtenerProductos);
-router.get("/:id", obtenerProducto);
+router.get("/:id", obtenerProductoPorId);
 router.put("/:id", validarEsquema(editarProductoEsquema), editarProducto);
 
 router.delete("/:id", esAdministrador, eliminarProducto);

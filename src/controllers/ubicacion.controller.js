@@ -6,7 +6,9 @@ export const crearUbicacion = async (req, res) => {
   let filePath = null;
 
   try {
-    const { producto_id, bodega_id, estante } = req.body;
+    const producto_id = parseInt(req.body.producto_id);
+    const bodega_id = parseInt(req.body.bodega_id);
+    const estante = parseInt(req.body.estante);
     await ubicacionService.validarUbicacionAntesDeCriar(producto_id, bodega_id, estante);
 
     if (req.file) {
@@ -15,7 +17,9 @@ export const crearUbicacion = async (req, res) => {
     }
 
     const datos = {
-        ...req.body,
+        producto_id,
+        bodega_id,
+        estante,
         foto: fotoUrl 
     };
     const ubicacion = await ubicacionService.crearUbicacionService(datos);
@@ -24,7 +28,6 @@ export const crearUbicacion = async (req, res) => {
     if (error.message === "UBICACION_DUPLICADA" && req.file && fotoUrl) {
       await eliminarImagen(fotoUrl);
     }
-    
     if (error.message === "PRODUCTO_NO_ENCONTRADO") 
         return res.status(404).json({ mensaje: "El producto no existe" });
     if (error.message === "BODEGA_NO_ENCONTRADA") 
@@ -39,22 +42,19 @@ export const crearUbicacion = async (req, res) => {
 
 export const obtenerUbicaciones = async (req, res) => {
   try {
-    const ubicaciones = await ubicacionService.obtenerUbicacionesService();
+    const { busqueda } = req.query; 
+    const ubicaciones = await ubicacionService.obtenerUbicacionesService(busqueda);
+    
+    if (busqueda && ubicaciones.length === 0) {
+        return res.status(404).json({ mensaje: "No se encontraron ubicaciones para ese producto" });
+    }
+
     res.json(ubicaciones);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ mensaje: "Error al obtener ubicaciones" });
   }
 };
-
-export const obtenerPorProducto = async (req, res) => {
-    try {
-      const { idProducto } = req.params;
-      const ubicaciones = await ubicacionService.obtenerUbicacionesPorProductoService(idProducto);
-      res.json(ubicaciones);
-    } catch (error) {
-      res.status(500).json({ mensaje: "Error al buscar ubicaciones del producto" });
-    }
-  };
 
 export const obtenerUbicacion = async (req, res) => {
     try {
@@ -101,34 +101,11 @@ export const eliminarUbicacion = async (req, res) => {
     if (ubicacion.foto) {
       await eliminarImagen(ubicacion.foto);
     }
-
-
-
     await ubicacionService.eliminarUbicacionService(id);
     res.json({ mensaje: "Ubicación eliminada" });
   } catch (error) {
     if (error.message === "UBICACION_NO_ENCONTRADA") 
       return res.status(404).json({ mensaje: "Ubicación no encontrada" });
     res.status(500).json({ mensaje: "Error interno" });
-  }
-};
-
-export const buscarPorSku = async (req, res) => {
-  try {
-    const { sku } = req.query;
-
-    if (!sku) {
-      return res.status(400).json({ mensaje: "Debes enviar un SKU para buscar" });
-    }
-
-    const ubicaciones = await ubicacionService.buscarUbicacionesPorSkuService(sku);
-    
-    if (ubicaciones.length === 0) {
-       return res.status(404).json({ mensaje: "No se encontraron ubicaciones para este SKU" });
-    }
-
-    res.json(ubicaciones);
-  } catch (error) {
-    res.status(500).json({ mensaje: "Error al buscar por SKU" });
   }
 };
