@@ -1,9 +1,6 @@
 import { DataSource } from "typeorm";
 import "dotenv/config";
-
-//borrar luego
 import bcrypt from "bcrypt";
-//+++++++++++++++++++++++++++++++
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -18,7 +15,7 @@ export const AppDataSource = new DataSource({
 });
 
 
-// Función para crear usuario admin
+//---Funcion para crear usuario admin---
 async function crearAdminPorDefecto() {
   try {
     const usuarioRepository = AppDataSource.getRepository("Usuario");
@@ -45,15 +42,15 @@ async function crearAdminPorDefecto() {
     console.error("Error al crear usuario admin:", error.message);
   }
 }
-//-------------------------------
+//--------------------------------------
 
 export async function connectDB() {
   try {
     await AppDataSource.initialize();
     console.log("Conexión exitosa a la base de datos de Supabase!");
-    //crear usuario inicial
+    //---crear admin inicial----
     await crearAdminPorDefecto();
-    //+++++++++++++++++++++++++++++++++
+    //--------------------------
   } catch (error) {
     console.error("Error al conectar con la base de datos:", error);
     process.exit(1);
