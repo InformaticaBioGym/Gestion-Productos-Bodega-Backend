@@ -4,6 +4,7 @@ export const crearBodegaEsquema = Joi.object({
   nombre: Joi.string().min(3).max(100).required().messages({
     "string.empty": "El nombre es obligatorio",
     "string.min": "El nombre debe tener al menos 3 caracteres",
+    "string.max": "El nombre es muy largo (máximo 100 caracteres)",
     "any.required": "El nombre es obligatorio"
   }),
   
@@ -17,7 +18,8 @@ export const crearBodegaEsquema = Joi.object({
   n_estantes: Joi.number().integer().min(1).required().messages({
     "number.base": "El número de estantes debe ser un número",
     "number.min": "La bodega debe tener al menos 1 estante",
-    "any.required": "El número de estantes es obligatorio"
+    "any.required": "El número de estantes es obligatorio",
+    "string.empty": "El número de estantes es obligatorio"
   })
 });
 
