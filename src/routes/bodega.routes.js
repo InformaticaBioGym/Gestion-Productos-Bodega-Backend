@@ -1,14 +1,20 @@
 import { Router } from "express";
-import { 
-  crearBodega, 
-  obtenerBodegas, 
-  obtenerBodega, 
-  editarBodega, 
-  eliminarBodega 
+import {
+  crearBodega,
+  obtenerBodegas,
+  obtenerBodega,
+  editarBodega,
+  eliminarBodega,
 } from "../controllers/bodega.controller.js";
-import { verificarToken, esAdministrador } from "../middlewares/auth.middleware.js";
+import {
+  verificarToken,
+  esAdministrador,
+} from "../middlewares/auth.middleware.js";
 import { validarEsquema } from "../middlewares/validador.middleware.js";
-import { crearBodegaEsquema, editarBodegaEsquema } from "../validations/bodega.validation.js";
+import {
+  crearBodegaEsquema,
+  editarBodegaEsquema,
+} from "../validations/bodega.validation.js";
 
 const router = Router();
 router.use(verificarToken);

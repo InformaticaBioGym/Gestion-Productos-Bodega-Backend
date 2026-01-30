@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/db.config.js";
-import { Producto } from "../entities/producto.entity.js"; 
+import { Producto } from "../entities/producto.entity.js";
 import { ILike } from "typeorm";
 
 const productoRepository = AppDataSource.getRepository(Producto);
@@ -17,10 +17,7 @@ export const obtenerProductosService = async (termino) => {
     return await productoRepository.find({ take: 50 });
   }
   return await productoRepository.find({
-    where: [
-      { sku: ILike(`%${termino}%`) },   
-      { nombre: ILike(`%${termino}%`) } 
-    ]
+    where: [{ sku: ILike(`%${termino}%`) }, { nombre: ILike(`%${termino}%`) }],
   });
 };
 
@@ -34,7 +31,9 @@ export const editarProductoService = async (id, datosActualizados) => {
   const producto = await obtenerProductoPorIdService(id);
 
   if (datosActualizados.sku && datosActualizados.sku !== producto.sku) {
-    const skuOcupado = await productoRepository.findOneBy({ sku: datosActualizados.sku });
+    const skuOcupado = await productoRepository.findOneBy({
+      sku: datosActualizados.sku,
+    });
     if (skuOcupado) throw new Error("SKU_DUPLICADO");
   }
 

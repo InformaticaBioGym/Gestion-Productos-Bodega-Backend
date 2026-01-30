@@ -6,9 +6,8 @@ export const registrarUsuario = async (req, res) => {
 
     res.status(201).json({
       mensaje: "Usuario registrado con éxito",
-      usuario
+      usuario,
     });
-
   } catch (error) {
     if (error.message === "CORREO_DUPLICADO") {
       return res.status(400).json({ mensaje: "El correo ya está registrado." });
@@ -26,12 +25,13 @@ export const loginUsuario = async (req, res) => {
 
     res.status(200).json({
       mensaje: "Inicio de sesión exitoso",
-      ...resultado 
+      ...resultado,
     });
-
   } catch (error) {
     if (error.message === "USUARIO_NO_ENCONTRADO") {
-      return res.status(404).json({ mensaje: "El correo ingresado no está registrado." });
+      return res
+        .status(404)
+        .json({ mensaje: "El correo ingresado no está registrado." });
     }
     if (error.message === "CONTRASEÑA_INCORRECTA") {
       return res.status(401).json({ mensaje: "Contraseña incorrecta." });

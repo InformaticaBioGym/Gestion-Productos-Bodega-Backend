@@ -8,7 +8,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json()); 
+app.use(express.json());
 app.use("/api", indexRoutes);
 
 app.get("/", (req, res) => {
@@ -17,5 +17,5 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, async () => {
   console.log(`Servidor Express corriendo en el puerto ${PORT}`);
-  await connectDB(); 
+  await connectDB();
 });

@@ -45,11 +45,16 @@ export const loginService = async (correo, contraseña) => {
   const token = jwt.sign(
     { id: usuario.id, rol: usuario.rol, correo: usuario.correo },
     process.env.JWT_SECRET,
-    { expiresIn: "8h" }
+    { expiresIn: "8h" },
   );
 
-  return { 
-    token, 
-    usuario: { id: usuario.id, nombre: usuario.nombre, correo: usuario.correo, rol: usuario.rol } 
+  return {
+    token,
+    usuario: {
+      id: usuario.id,
+      nombre: usuario.nombre,
+      correo: usuario.correo,
+      rol: usuario.rol,
+    },
   };
 };

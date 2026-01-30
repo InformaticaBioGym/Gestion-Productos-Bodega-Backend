@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/db.config.js";
-import { Bodega } from "../entities/bodega.entity.js"; 
+import { Bodega } from "../entities/bodega.entity.js";
 
 const bodegaRepository = AppDataSource.getRepository(Bodega);
 

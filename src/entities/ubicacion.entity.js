@@ -2,26 +2,26 @@ import { EntitySchema } from "typeorm";
 
 export const Ubicacion = new EntitySchema({
   name: "Ubicacion",
-  tableName: "ubicaciones", 
+  tableName: "ubicaciones",
   columns: {
-    id: { 
-      type: "int", 
-      primary: true, 
-      generated: true 
+    id: {
+      type: "int",
+      primary: true,
+      generated: true,
     },
-    foto: { 
-      type: "text", 
-      nullable: true 
-    }, 
-    estante: { 
-      type: "int", 
-      nullable: true 
+    foto: {
+      type: "text",
+      nullable: true,
     },
-    descripcion: { 
-      type: "varchar", 
+    estante: {
+      type: "int",
+      nullable: true,
+    },
+    descripcion: {
+      type: "varchar",
       length: 100,
-      nullable: true 
-    }, 
+      nullable: true,
+    },
   },
   relations: {
     producto: {

@@ -13,5 +13,4 @@ router.use("/productos", productRoutes);
 router.use("/bodegas", bodegaRoutes);
 router.use("/ubicaciones", ubicacionRoutes);
 
-
 export default router;

@@ -4,16 +4,15 @@ import bcrypt from "bcrypt";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  url: process.env.DATABASE_URL, 
+  url: process.env.DATABASE_URL,
   //Supabase exige conexion (SSL)
   ssl: {
     rejectUnauthorized: false,
   },
-  entities: ["src/entities/**/*.js"], 
-  synchronize: true, 
+  entities: ["src/entities/**/*.js"],
+  synchronize: true,
   logging: false,
 });
-
 
 //---Funcion para crear usuario admin---
 async function crearAdminPorDefecto() {
@@ -21,9 +20,9 @@ async function crearAdminPorDefecto() {
     const usuarioRepository = AppDataSource.getRepository("Usuario");
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
-    
+
     const adminExistente = await usuarioRepository.findOne({
-      where: { correo: adminEmail }
+      where: { correo: adminEmail },
     });
     if (adminExistente) {
       console.log("✓ Usuario admin ya existe");
@@ -35,7 +34,7 @@ async function crearAdminPorDefecto() {
       correo: adminEmail,
       nombre: "Administrador",
       contraseña: contraseñaEncriptada,
-      rol: "administrador"
+      rol: "administrador",
     });
     await usuarioRepository.save(nuevoAdmin);
   } catch (error) {

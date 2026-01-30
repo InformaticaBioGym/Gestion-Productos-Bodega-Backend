@@ -24,7 +24,8 @@ export const obtenerBodega = async (req, res) => {
     const bodega = await bodegaService.obtenerBodegaPorIdService(id);
     res.json(bodega);
   } catch (error) {
-    if (error.message === "BODEGA_NO_ENCONTRADO") return res.status(404).json({ mensaje: "Bodega no encontrada" });
+    if (error.message === "BODEGA_NO_ENCONTRADO")
+      return res.status(404).json({ mensaje: "Bodega no encontrada" });
     res.status(500).json({ mensaje: "Error interno" });
   }
 };
@@ -35,7 +36,8 @@ export const editarBodega = async (req, res) => {
     const bodega = await bodegaService.editarBodegaService(id, req.body);
     res.json({ mensaje: "Bodega actualizada", bodega });
   } catch (error) {
-    if (error.message === "BODEGA_NO_ENCONTRADA") return res.status(404).json({ mensaje: "Bodega no encontrada" });
+    if (error.message === "BODEGA_NO_ENCONTRADA")
+      return res.status(404).json({ mensaje: "Bodega no encontrada" });
     res.status(500).json({ mensaje: "Error interno" });
   }
 };
@@ -46,7 +48,8 @@ export const eliminarBodega = async (req, res) => {
     await bodegaService.eliminarBodegaService(id);
     res.json({ mensaje: "Bodega eliminada correctamente" });
   } catch (error) {
-    if (error.message === "BODEGA_NO_ENCONTRADA") return res.status(404).json({ mensaje: "Bodega no encontrada" });
+    if (error.message === "BODEGA_NO_ENCONTRADA")
+      return res.status(404).json({ mensaje: "Bodega no encontrada" });
     res.status(500).json({ mensaje: "Error interno" });
   }
 };

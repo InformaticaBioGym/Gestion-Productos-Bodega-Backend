@@ -7,7 +7,7 @@ export const Usuario = new EntitySchema({
     id: {
       primary: true,
       type: "int",
-      generated: true, 
+      generated: true,
     },
     correo: {
       type: "varchar",
@@ -20,13 +20,12 @@ export const Usuario = new EntitySchema({
     },
     contraseña: {
       type: "varchar",
-      length: 255, 
+      length: 255,
     },
     rol: {
       type: "varchar",
       length: 20,
       default: "trabajador", // 'trabajador' o 'administrador'
-
     },
   },
 });

@@ -1,14 +1,20 @@
 import { Router } from "express";
-import { 
-  crearProducto, 
-  obtenerProductos, 
-  obtenerProductoPorId, 
-  editarProducto, 
-  eliminarProducto
+import {
+  crearProducto,
+  obtenerProductos,
+  obtenerProductoPorId,
+  editarProducto,
+  eliminarProducto,
 } from "../controllers/producto.controller.js";
-import { verificarToken, esAdministrador } from "../middlewares/auth.middleware.js";
+import {
+  verificarToken,
+  esAdministrador,
+} from "../middlewares/auth.middleware.js";
 import { validarEsquema } from "../middlewares/validador.middleware.js";
-import { crearProductoEsquema, editarProductoEsquema } from "../validations/producto.validation.js";
+import {
+  crearProductoEsquema,
+  editarProductoEsquema,
+} from "../validations/producto.validation.js";
 
 const router = Router();
 

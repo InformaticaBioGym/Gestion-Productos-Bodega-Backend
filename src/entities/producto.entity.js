@@ -4,19 +4,19 @@ export const Producto = new EntitySchema({
   name: "Producto",
   tableName: "productos",
   columns: {
-    id: { 
-      type: "int", 
-      primary: true, 
-      generated: true 
+    id: {
+      type: "int",
+      primary: true,
+      generated: true,
     },
-    sku: { 
-      type: "varchar", 
-      length: 50, 
-      unique: true 
-    }, 
-    nombre: { 
-      type: "varchar", 
-      length: 100 
+    sku: {
+      type: "varchar",
+      length: 50,
+      unique: true,
+    },
+    nombre: {
+      type: "varchar",
+      length: 100,
     },
   },
   relations: {
