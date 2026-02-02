@@ -25,7 +25,6 @@ export const subirImagen = async (filePath) => {
     await new Promise((resolve) => setTimeout(resolve, 500));
 
     await fs.remove(filePath);
-    console.log(`Imagen subida y archivo temporal eliminado: ${filePath}`);
 
     return resultado.secure_url;
   } catch (error) {
@@ -51,7 +50,6 @@ export const eliminarImagen = async (urlCloudinary) => {
       .replace(/v\d+\//g, "");
 
     await cloudinary.uploader.destroy(publicId);
-    console.log(`Imagen eliminada de Cloudinary: ${publicId}`);
   } catch (error) {
     console.error("Error eliminando de Cloudinary:", error);
     throw new Error("Error al eliminar la imagen");
