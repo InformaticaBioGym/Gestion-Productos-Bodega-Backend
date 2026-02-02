@@ -9,6 +9,7 @@ export const crearUbicacion = async (req, res) => {
     const producto_id = parseInt(req.body.producto_id);
     const bodega_id = parseInt(req.body.bodega_id);
     const estante = parseInt(req.body.estante);
+    const descripcion = req.body.descripcion;
     await ubicacionService.validarUbicacionAntesDeCriar(
       producto_id,
       bodega_id,
@@ -24,6 +25,7 @@ export const crearUbicacion = async (req, res) => {
       producto_id,
       bodega_id,
       estante,
+      descripcion,
       foto: fotoUrl,
     };
     const ubicacion = await ubicacionService.crearUbicacionService(datos);
