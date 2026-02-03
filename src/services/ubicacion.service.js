@@ -83,17 +83,13 @@ export const editarUbicacionService = async (id, datos) => {
   });
 
   if (!ubicacion) throw new Error("UBICACION_NO_ENCONTRADA");
-  const bodegaIdFinal = datos.bodega_id
-    ? parseInt(datos.bodega_id)
-    : ubicacion.bodega.id;
-  const estanteFinal = datos.estante
-    ? parseInt(datos.estante)
-    : ubicacion.estante;
-  if (datos.bodega_id || datos.estante) {
+  const bodegaIdFinal = datos.bodega_id !== undefined ? parseInt(datos.bodega_id) : ubicacion.bodega.id;
+  const estanteFinal = datos.estante !== undefined ? datos.estante : ubicacion.estante;
+  if (datos.bodega_id || datos.estante !== undefined) {
     const bodega = await bodegaRepository.findOneBy({ id: bodegaIdFinal });
     if (!bodega) throw new Error("BODEGA_NO_ENCONTRADA");
 
-    if (estanteFinal > bodega.n_estantes) {
+    if (estanteFinal !== null && estanteFinal > bodega.n_estantes) {
       throw new Error("ESTANTE_INVALIDO");
     }
   }
