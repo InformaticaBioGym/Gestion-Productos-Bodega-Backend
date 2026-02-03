@@ -20,7 +20,6 @@ async function crearAdminPorDefecto() {
     const usuarioRepository = AppDataSource.getRepository("Usuario");
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
-
     const adminExistente = await usuarioRepository.findOne({
       where: { correo: adminEmail },
     });
@@ -29,7 +28,7 @@ async function crearAdminPorDefecto() {
       return;
     }
     const salt = await bcrypt.genSalt(10);
-    const contraseñaEncriptada = await bcrypt.hash(adminPassword, salt);
+    const contraseñaEncriptada = bcrypt.hash(adminPassword, salt);
     const nuevoAdmin = usuarioRepository.create({
       correo: adminEmail,
       nombre: "Administrador",
