@@ -3,6 +3,7 @@ import cors from "cors";
 import { connectDB } from "./config/db.config.js";
 import indexRoutes from "./routes/index.routes.js";
 import helmet from "helmet";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 
@@ -11,6 +12,18 @@ const PORT = process.env.PORT || 3000;
 app.use(helmet()); 
 app.use(cors());
 app.use(express.json());
+
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 10,
+  message: {
+    mensaje: "Has excedido el límite de intentos. Por favor, intenta de nuevo en 15 minutos."
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.use("/api/auth/login", loginLimiter);
 app.use("/api", indexRoutes);
 
 app.get("/", (req, res) => {
