@@ -24,7 +24,7 @@ async function crearAdminPorDefecto() {
       where: { correo: adminEmail },
     });
     if (adminExistente) {
-      console.log("✓ Usuario admin ya existe");
+      console.log("Usuario admin ya existe");
       return;
     }
     const salt = await bcrypt.genSalt(10);
@@ -45,7 +45,7 @@ async function crearAdminPorDefecto() {
 export async function connectDB() {
   try {
     await AppDataSource.initialize();
-    console.log("Conexión exitosa a la base de datos de Supabase!");
+    console.log("Conexión exitosa a la base de datos");
     //---crear admin inicial----
     await crearAdminPorDefecto();
     //--------------------------
