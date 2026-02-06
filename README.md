@@ -77,4 +77,4 @@ Si la empresa desea continuar el desarrollo o escalar el código:
     ```
 
 ---
-*Desarrollado como Proyecto de Práctica Profesional - 2026.*
+*Desarrollado como Proyecto de Práctica Profesional - Vicente Asmussen - 2026.*
