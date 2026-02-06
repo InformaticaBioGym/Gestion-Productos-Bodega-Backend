@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { connectDB } from "./config/db.config.js";
+import { connectDB, AppDataSource } from "./config/db.config.js";
 import indexRoutes from "./routes/index.routes.js";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -30,6 +30,16 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   });
+});
+
+app.get("/db-wake-up", async (req, res) => {
+  try {
+    await AppDataSource.query("SELECT 1");
+    res.status(200).send("DB despierta");
+  } catch (error) {
+    console.error("Error en wake-up:", error);
+    res.status(200).send("Intento de despertar realizado");
+  }
 });
 
 app.use("/api/auth/login", loginLimiter);
