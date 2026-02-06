@@ -12,7 +12,7 @@ export const registerService = async (datos) => {
     throw new Error("CORREO_DUPLICADO");
   }
 
-  const salt = await bcrypt.genSalt(10);
+  const salt = await bcrypt.genSalt(8);
   const contraseñaEncriptada = await bcrypt.hash(contraseña, salt);
 
   const nuevoUsuario = usuarioRepository.create({
