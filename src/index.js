@@ -23,6 +23,15 @@ const loginLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+app.get("/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    service: "BioGym API",
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 app.use("/api/auth/login", loginLimiter);
 app.use("/api", indexRoutes);
 
