@@ -35,19 +35,23 @@ export const crearUbicacion = async (req, res) => {
   } catch (error) {
     console.error("Error creando ubicación:", error);
     if (fotoUrl) {
-      await eliminarImagen(fotoUrl); 
+      await eliminarImagen(fotoUrl);
     }
-    if (req.file && await fs.pathExists(req.file.path)) {
+    if (req.file && (await fs.pathExists(req.file.path))) {
       await fs.unlink(req.file.path);
     }
     if (error.message === "UBICACION_DUPLICADA")
-      return res.status(400).json({ mensaje: "El producto ya existe en esa ubicación." });
+      return res
+        .status(400)
+        .json({ mensaje: "El producto ya existe en esa ubicación." });
     if (error.message === "PRODUCTO_NO_ENCONTRADO")
       return res.status(404).json({ mensaje: "El producto no existe" });
     if (error.message === "BODEGA_NO_ENCONTRADA")
       return res.status(404).json({ mensaje: "La bodega no existe" });
     if (error.message === "ESTANTE_INVALIDO")
-      return res.status(400).json({ mensaje: "El estante excede el límite de la bodega" });
+      return res
+        .status(400)
+        .json({ mensaje: "El estante excede el límite de la bodega" });
     res.status(500).json({ mensaje: "Error interno" });
   }
 };
@@ -90,7 +94,11 @@ export const editarUbicacion = async (req, res) => {
     const ubicacionActual =
       await ubicacionService.obtenerUbicacionPorIdService(id);
     let datosActualizacion = { ...req.body };
-    if (req.body.estante === "" || req.body.estante === undefined || req.body.estante === "null") {
+    if (
+      req.body.estante === "" ||
+      req.body.estante === undefined ||
+      req.body.estante === "null"
+    ) {
       datosActualizacion.estante = null;
     } else {
       datosActualizacion.estante = parseInt(req.body.estante);
@@ -99,7 +107,7 @@ export const editarUbicacion = async (req, res) => {
     if (req.file) {
       newFotoUrl = await subirImagen(req.file.path);
       datosActualizacion.foto = newFotoUrl;
-      
+
       if (await fs.pathExists(req.file.path)) {
         await fs.unlink(req.file.path);
       }
@@ -115,15 +123,21 @@ export const editarUbicacion = async (req, res) => {
     res.json({ mensaje: "Ubicación actualizada", ubicacion });
   } catch (error) {
     console.error("Error en editar:", error);
-      if (newFotoUrl) {
+    if (newFotoUrl) {
       await eliminarImagen(newFotoUrl);
     }
     if (error.message === "UBICACION_NO_ENCONTRADA")
       return res.status(404).json({ mensaje: "Ubicación no encontrada" });
     if (error.message === "ESTANTE_INVALIDO")
-      return res.status(400).json({ mensaje: "El estante no es válido para esta bodega" });
+      return res
+        .status(400)
+        .json({ mensaje: "El estante no es válido para esta bodega" });
     if (error.message === "UBICACION_DUPLICADA")
-      return res.status(400).json({ mensaje: "El producto ya existe en esa ubicación de destino." });
+      return res
+        .status(400)
+        .json({
+          mensaje: "El producto ya existe en esa ubicación de destino.",
+        });
 
     res.status(500).json({ mensaje: "Error interno" });
   }
@@ -132,15 +146,12 @@ export const editarUbicacion = async (req, res) => {
 export const eliminarUbicacion = async (req, res) => {
   try {
     const { id } = req.params;
-    const ubicacion = await ubicacionService.obtenerUbicacionPorIdService(id);
-    if (ubicacion.foto) {
-      await eliminarImagen(ubicacion.foto);
-    }
     await ubicacionService.eliminarUbicacionService(id);
     res.json({ mensaje: "Ubicación eliminada" });
   } catch (error) {
     if (error.message === "UBICACION_NO_ENCONTRADA")
       return res.status(404).json({ mensaje: "Ubicación no encontrada" });
+    console.error(error);
     res.status(500).json({ mensaje: "Error interno" });
   }
 };

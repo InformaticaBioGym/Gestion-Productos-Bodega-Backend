@@ -2,8 +2,8 @@ import { AppDataSource } from "../config/db.config.js";
 import { Ubicacion } from "../entities/ubicacion.entity.js";
 import { Bodega } from "../entities/bodega.entity.js";
 import { Producto } from "../entities/producto.entity.js";
+import { eliminarImagen } from "../utils/cloudinary.utils.js";
 import { IsNull } from "typeorm";
-import { ILike } from "typeorm";
 
 const ubicacionRepository = AppDataSource.getRepository(Ubicacion);
 const bodegaRepository = AppDataSource.getRepository(Bodega);
@@ -83,8 +83,12 @@ export const editarUbicacionService = async (id, datos) => {
   });
 
   if (!ubicacion) throw new Error("UBICACION_NO_ENCONTRADA");
-  const bodegaIdFinal = datos.bodega_id !== undefined ? parseInt(datos.bodega_id) : ubicacion.bodega.id;
-  const estanteFinal = datos.estante !== undefined ? datos.estante : ubicacion.estante;
+  const bodegaIdFinal =
+    datos.bodega_id !== undefined
+      ? parseInt(datos.bodega_id)
+      : ubicacion.bodega.id;
+  const estanteFinal =
+    datos.estante !== undefined ? datos.estante : ubicacion.estante;
   if (datos.bodega_id || datos.estante !== undefined) {
     const bodega = await bodegaRepository.findOneBy({ id: bodegaIdFinal });
     if (!bodega) throw new Error("BODEGA_NO_ENCONTRADA");
@@ -111,7 +115,14 @@ export const editarUbicacionService = async (id, datos) => {
 };
 
 export const eliminarUbicacionService = async (id) => {
+  const ubicacion = await ubicacionRepository.findOne({
+    where: { id: parseInt(id) },
+  });
+  if (!ubicacion) throw new Error("UBICACION_NO_ENCONTRADA");
+  if (ubicacion.foto) {
+    await eliminarImagen(ubicacion.foto);
+  }
   const resultado = await ubicacionRepository.delete({ id: parseInt(id) });
-  if (resultado.affected === 0) throw new Error("UBICACION_NO_ENCONTRADA");
+
   return true;
 };

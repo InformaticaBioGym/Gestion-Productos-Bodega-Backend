@@ -39,11 +39,9 @@ export const editarUsuario = async (req, res) => {
       return res.status(404).json({ mensaje: "Usuario no encontrado" });
     }
     if (error.message === "CORREO_DUPLICADO") {
-      return res
-        .status(400)
-        .json({
-          mensaje: "El nuevo correo ya está siendo usado por otro usuario.",
-        });
+      return res.status(400).json({
+        mensaje: "El nuevo correo ya está siendo usado por otro usuario.",
+      });
     }
     res.status(500).json({ mensaje: "Error interno" });
   }
@@ -54,11 +52,9 @@ export const eliminarUsuario = async (req, res) => {
     const { id } = req.params;
 
     if (req.usuario.id == id) {
-      return res
-        .status(400)
-        .json({
-          mensaje: "No puedes eliminar tu propia cuenta de administrador",
-        });
+      return res.status(400).json({
+        mensaje: "No puedes eliminar tu propia cuenta de administrador",
+      });
     }
 
     await userService.eliminarUsuarioService(id);

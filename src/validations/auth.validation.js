@@ -9,13 +9,18 @@ export const registroEsquema = Joi.object({
     "string.email": "El correo debe ser una dirección de correo válida",
   }),
 
-  nombre: Joi.string().pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/).min(3).max(100).required().messages({
-    "string.pattern.base": "El nombre solo puede contener letras y espacios",
-    "string.empty": "El nombre no puede estar vacío",
-    "string.min": "El nombre debe tener al menos 3 caracteres",
-    "string.max": "El nombre no puede superar los 100 caracteres",
-    "any.required": "El nombre es obligatorio",
-  }),
+  nombre: Joi.string()
+    .pattern(/^[a-zA-ZÀ-ÿ\u00f1\u00d1\s]+$/)
+    .min(3)
+    .max(100)
+    .required()
+    .messages({
+      "string.pattern.base": "El nombre solo puede contener letras y espacios",
+      "string.empty": "El nombre no puede estar vacío",
+      "string.min": "El nombre debe tener al menos 3 caracteres",
+      "string.max": "El nombre no puede superar los 100 caracteres",
+      "any.required": "El nombre es obligatorio",
+    }),
 
   contraseña: Joi.string().min(6).required().messages({
     "string.min": "La contraseña debe tener al menos 6 caracteres",

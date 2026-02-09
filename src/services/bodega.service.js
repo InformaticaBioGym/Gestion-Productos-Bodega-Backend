@@ -1,7 +1,10 @@
 import { AppDataSource } from "../config/db.config.js";
 import { Bodega } from "../entities/bodega.entity.js";
+import { Ubicacion } from "../entities/ubicacion.entity.js";
+import { eliminarImagen } from "../utils/cloudinary.utils.js";
 
 const bodegaRepository = AppDataSource.getRepository(Bodega);
+const ubicacionRepository = AppDataSource.getRepository(Ubicacion);
 
 export const crearBodegaService = async (datos) => {
   const nuevaBodega = bodegaRepository.create(datos);
@@ -25,7 +28,20 @@ export const editarBodegaService = async (id, datosActualizados) => {
 };
 
 export const eliminarBodegaService = async (id) => {
-  const resultado = await bodegaRepository.delete({ id: parseInt(id) });
-  if (resultado.affected === 0) throw new Error("BODEGA_NO_ENCONTRADA");
+  const bodega = await bodegaRepository.findOne({
+    where: { id: parseInt(id) },
+  });
+  if (!bodega) throw new Error("BODEGA_NO_ENCONTRADA");
+  const ubicaciones = await ubicacionRepository.find({
+    where: { bodega: { id: parseInt(id) } },
+  });
+  const promesasEliminacion = ubicaciones.map((ubi) => {
+    if (ubi.foto) {
+      return eliminarImagen(ubi.foto);
+    }
+  });
+  await Promise.all(promesasEliminacion);
+  await bodegaRepository.delete({ id: parseInt(id) });
+
   return true;
 };

@@ -6,10 +6,10 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 
 const app = express();
-app.set('trust proxy', 1);
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
-app.use(helmet()); 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
@@ -17,7 +17,8 @@ const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
   message: {
-    mensaje: "Has excedido el límite de intentos. Por favor, intenta de nuevo en 15 minutos."
+    mensaje:
+      "Has excedido el límite de intentos. Por favor, intenta de nuevo en 15 minutos.",
   },
   standardHeaders: true,
   legacyHeaders: false,
@@ -28,7 +29,7 @@ app.get("/health", (req, res) => {
     status: "ok",
     service: "BioGym API",
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 

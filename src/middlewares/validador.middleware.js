@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 
 export const validarEsquema = (esquema) => {
-  return async(req, res, next) => {
+  return async (req, res, next) => {
     const { error, value } = esquema.validate(req.body, {
       abortEarly: false,
       convert: true,
@@ -10,11 +10,11 @@ export const validarEsquema = (esquema) => {
     if (error) {
       if (req.file) {
         try {
-           if (await fs.pathExists(req.file.path)) {
-             await fs.unlink(req.file.path);
-           }
+          if (await fs.pathExists(req.file.path)) {
+            await fs.unlink(req.file.path);
+          }
         } catch (err) {
-           console.error("Error al intentar borrar archivo temporal:", err);
+          console.error("Error al intentar borrar archivo temporal:", err);
         }
       }
       const mensajes = error.details

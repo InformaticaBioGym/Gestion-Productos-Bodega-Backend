@@ -1,8 +1,11 @@
 import { AppDataSource } from "../config/db.config.js";
 import { Producto } from "../entities/producto.entity.js";
+import { Ubicacion } from "../entities/ubicacion.entity.js";
+import { eliminarImagen } from "../utils/cloudinary.utils.js";
 import { ILike } from "typeorm";
 
 const productoRepository = AppDataSource.getRepository(Producto);
+const ubicacionRepository = AppDataSource.getRepository(Ubicacion);
 
 export const crearProductoService = async (datos) => {
   const existeSku = await productoRepository.findOneBy({ sku: datos.sku });
@@ -42,7 +45,21 @@ export const editarProductoService = async (id, datosActualizados) => {
 };
 
 export const eliminarProductoService = async (id) => {
-  const resultado = await productoRepository.delete({ id: parseInt(id) });
-  if (resultado.affected === 0) throw new Error("PRODUCTO_NO_ENCONTRADO");
+  const producto = await productoRepository.findOne({
+    where: { id: parseInt(id) },
+  });
+  if (!producto) throw new Error("PRODUCTO_NO_ENCONTRADO");
+
+  const ubicaciones = await ubicacionRepository.find({
+    where: { producto: { id: parseInt(id) } },
+  });
+  const promesasEliminacion = ubicaciones.map((ubi) => {
+    if (ubi.foto) {
+      return eliminarImagen(ubi.foto);
+    }
+  });
+  await Promise.all(promesasEliminacion);
+  await productoRepository.delete({ id: parseInt(id) });
+
   return true;
 };
