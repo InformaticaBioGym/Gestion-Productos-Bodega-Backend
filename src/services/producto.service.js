@@ -17,7 +17,9 @@ const limpiarDatos = (datos) => {
 
 export const crearProductoService = async (datos) => {
   const datosLimpios = limpiarDatos(datos);
-  const existeSku = await productoRepository.findOneBy({ sku: datosLimpios.sku });
+  const existeSku = await productoRepository.findOneBy({
+    sku: datosLimpios.sku,
+  });
   if (existeSku) throw new Error("SKU_DUPLICADO");
 
   if (datosLimpios.codigo_barra) {
@@ -36,10 +38,7 @@ export const obtenerProductosService = async (termino) => {
   }
   const terminoLimpio = termino.trim();
   const coincidenciaExacta = await productoRepository.findOne({
-    where: [
-      { codigo_barra: terminoLimpio },
-      { sku: terminoLimpio } 
-    ]
+    where: [{ codigo_barra: terminoLimpio }, { sku: terminoLimpio }],
   });
   if (coincidenciaExacta) {
     return [coincidenciaExacta];

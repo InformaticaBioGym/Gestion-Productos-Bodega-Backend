@@ -133,11 +133,9 @@ export const editarUbicacion = async (req, res) => {
         .status(400)
         .json({ mensaje: "El estante no es válido para esta bodega" });
     if (error.message === "UBICACION_DUPLICADA")
-      return res
-        .status(400)
-        .json({
-          mensaje: "El producto ya existe en esa ubicación de destino.",
-        });
+      return res.status(400).json({
+        mensaje: "El producto ya existe en esa ubicación de destino.",
+      });
 
     res.status(500).json({ mensaje: "Error interno" });
   }

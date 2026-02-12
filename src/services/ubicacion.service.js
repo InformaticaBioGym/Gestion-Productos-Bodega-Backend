@@ -64,14 +64,16 @@ export const obtenerUbicacionesService = async (termino) => {
   const terminoLimpio = termino.trim();
 
   const queryExacta = ubicacionRepository
-      .createQueryBuilder("ubicacion")
-      .leftJoinAndSelect("ubicacion.producto", "producto")
-      .leftJoinAndSelect("ubicacion.bodega", "bodega")
-      .where("producto.codigo_barra = :exacto OR producto.sku = :exacto", { exacto: terminoLimpio });
+    .createQueryBuilder("ubicacion")
+    .leftJoinAndSelect("ubicacion.producto", "producto")
+    .leftJoinAndSelect("ubicacion.bodega", "bodega")
+    .where("producto.codigo_barra = :exacto OR producto.sku = :exacto", {
+      exacto: terminoLimpio,
+    });
 
   const resultadosExactos = await queryExacta.getMany();
   if (resultadosExactos.length > 0) {
-      return resultadosExactos;
+    return resultadosExactos;
   }
 
   query.where(
