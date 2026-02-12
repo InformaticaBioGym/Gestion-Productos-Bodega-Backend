@@ -6,6 +6,9 @@ export const crearUbicacion = async (req, res) => {
   let fotoUrl = null;
 
   try {
+    if (!req.file) {
+      return res.status(400).json({ mensaje: "La foto de la ubicación es obligatoria." });
+    }
     const producto_id = parseInt(req.body.producto_id);
     const bodega_id = parseInt(req.body.bodega_id);
     const estante = req.body.estante ? parseInt(req.body.estante) : null;
@@ -16,11 +19,9 @@ export const crearUbicacion = async (req, res) => {
       estante,
     );
 
-    if (req.file) {
-      fotoUrl = await subirImagen(req.file.path);
-      if (await fs.pathExists(req.file.path)) {
-        await fs.unlink(req.file.path);
-      }
+    fotoUrl = await subirImagen(req.file.path);
+    if (await fs.pathExists(req.file.path)) {
+      await fs.unlink(req.file.path);
     }
 
     const datos = {

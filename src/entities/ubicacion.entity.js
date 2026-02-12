@@ -11,7 +11,7 @@ export const Ubicacion = new EntitySchema({
     },
     foto: {
       type: "text",
-      nullable: true,
+      nullable: false,
     },
     estante: {
       type: "int",
