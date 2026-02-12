@@ -22,6 +22,10 @@ export const Ubicacion = new EntitySchema({
       length: 100,
       nullable: true,
     },
+    fecha_creacion: {
+      type: "timestamp",
+      createDate: true,
+    },
   },
   relations: {
     producto: {

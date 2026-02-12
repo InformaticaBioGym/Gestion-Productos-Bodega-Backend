@@ -7,6 +7,8 @@ export const crearProducto = async (req, res) => {
   } catch (error) {
     if (error.message === "SKU_DUPLICADO")
       return res.status(400).json({ mensaje: "El SKU ya existe" });
+    if (error.message === "CODIGO_BARRA_DUPLICADO")
+      return res.status(400).json({ mensaje: "El código de barras ya existe" });
     res.status(500).json({ mensaje: "Error interno" });
   }
 };

@@ -14,6 +14,16 @@ export const Producto = new EntitySchema({
       length: 50,
       unique: true,
     },
+    codigo_barra: {
+      type: "varchar",
+      length: 50,
+      unique: true,
+      nullable: true,
+    },
+    observaciones: {
+      type: "text",
+      nullable: true,
+    },
     nombre: {
       type: "varchar",
       length: 100,

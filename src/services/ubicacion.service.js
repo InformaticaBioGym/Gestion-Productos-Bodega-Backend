@@ -55,14 +55,29 @@ export const obtenerUbicacionesService = async (termino) => {
   const query = ubicacionRepository
     .createQueryBuilder("ubicacion")
     .leftJoinAndSelect("ubicacion.producto", "producto")
-    .leftJoinAndSelect("ubicacion.bodega", "bodega");
+    .leftJoinAndSelect("ubicacion.bodega", "bodega")
+    .orderBy("ubicacion.fecha_creacion", "DESC");
 
-  if (termino) {
-    query.where(
-      "producto.sku ILIKE :termino OR producto.nombre ILIKE :termino",
-      { termino: `%${termino}%` },
-    );
+  if (!termino) {
+    return await query.getMany();
   }
+  const terminoLimpio = termino.trim();
+
+  const queryExacta = ubicacionRepository
+      .createQueryBuilder("ubicacion")
+      .leftJoinAndSelect("ubicacion.producto", "producto")
+      .leftJoinAndSelect("ubicacion.bodega", "bodega")
+      .where("producto.codigo_barra = :exacto OR producto.sku = :exacto", { exacto: terminoLimpio });
+
+  const resultadosExactos = await queryExacta.getMany();
+  if (resultadosExactos.length > 0) {
+      return resultadosExactos;
+  }
+
+  query.where(
+    "producto.sku ILIKE :parcial OR producto.nombre ILIKE :parcial OR producto.codigo_barra ILIKE :parcial",
+    { parcial: `%${terminoLimpio}%` },
+  );
 
   return await query.getMany();
 };

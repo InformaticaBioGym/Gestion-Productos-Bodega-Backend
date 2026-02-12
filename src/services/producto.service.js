@@ -7,11 +7,26 @@ import { ILike } from "typeorm";
 const productoRepository = AppDataSource.getRepository(Producto);
 const ubicacionRepository = AppDataSource.getRepository(Ubicacion);
 
+const limpiarDatos = (datos) => {
+  const nuevosDatos = { ...datos };
+  if (nuevosDatos.codigo_barra === "") {
+    nuevosDatos.codigo_barra = null;
+  }
+  return nuevosDatos;
+};
+
 export const crearProductoService = async (datos) => {
-  const existeSku = await productoRepository.findOneBy({ sku: datos.sku });
+  const datosLimpios = limpiarDatos(datos);
+  const existeSku = await productoRepository.findOneBy({ sku: datosLimpios.sku });
   if (existeSku) throw new Error("SKU_DUPLICADO");
 
-  const nuevoProducto = productoRepository.create(datos);
+  if (datosLimpios.codigo_barra) {
+    const existeBarra = await productoRepository.findOneBy({
+      codigo_barra: datosLimpios.codigo_barra,
+    });
+    if (existeBarra) throw new Error("CODIGO_BARRA_DUPLICADO");
+  }
+  const nuevoProducto = productoRepository.create(datosLimpios);
   return await productoRepository.save(nuevoProducto);
 };
 
@@ -19,8 +34,22 @@ export const obtenerProductosService = async (termino) => {
   if (!termino) {
     return await productoRepository.find({ take: 50 });
   }
+  const terminoLimpio = termino.trim();
+  const coincidenciaExacta = await productoRepository.findOne({
+    where: [
+      { codigo_barra: terminoLimpio },
+      { sku: terminoLimpio } 
+    ]
+  });
+  if (coincidenciaExacta) {
+    return [coincidenciaExacta];
+  }
   return await productoRepository.find({
-    where: [{ sku: ILike(`%${termino}%`) }, { nombre: ILike(`%${termino}%`) }],
+    where: [
+      { sku: ILike(`%${terminoLimpio}%`) },
+      { nombre: ILike(`%${terminoLimpio}%`) },
+      { codigo_barra: ILike(`%${terminoLimpio}%`) },
+    ],
   });
 };
 
@@ -32,15 +61,25 @@ export const obtenerProductoPorIdService = async (id) => {
 
 export const editarProductoService = async (id, datosActualizados) => {
   const producto = await obtenerProductoPorIdService(id);
+  const datosLimpios = limpiarDatos(datosActualizados);
 
-  if (datosActualizados.sku && datosActualizados.sku !== producto.sku) {
+  if (datosLimpios.sku && datosLimpios.sku !== producto.sku) {
     const skuOcupado = await productoRepository.findOneBy({
-      sku: datosActualizados.sku,
+      sku: datosLimpios.sku,
     });
     if (skuOcupado) throw new Error("SKU_DUPLICADO");
   }
+  if (
+    datosLimpios.codigo_barra &&
+    datosLimpios.codigo_barra !== producto.codigo_barra
+  ) {
+    const barraOcupada = await productoRepository.findOneBy({
+      codigo_barra: datosLimpios.codigo_barra,
+    });
+    if (barraOcupada) throw new Error("CODIGO_BARRA_DUPLICADO");
+  }
 
-  productoRepository.merge(producto, datosActualizados);
+  productoRepository.merge(producto, datosLimpios);
   return await productoRepository.save(producto);
 };
 
