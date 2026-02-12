@@ -20,8 +20,7 @@ export const crearUbicacionEsquema = Joi.object({
     "string.base": "La descripción debe ser texto",
     "string.max": "La descripción no puede superar 100 caracteres",
   }),
-  foto: Joi.string().allow(null, "").required().messages({
-    "any.required": "La foto de la ubicación es obligatoria",
+  foto: Joi.string().allow(null, "").messages({
     "string.base": "La foto debe ser una cadena (url o nombre de archivo)",
   }),
 });
